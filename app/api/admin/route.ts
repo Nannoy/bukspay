@@ -9,8 +9,11 @@ export async function GET(req: NextRequest) {
   const adminParam = req.nextUrl.searchParams.get("admin");
   const currentUser = await getCurrentUser();
 
-  if (adminParam !== "true" && (!currentUser || currentUser.role !== "admin")) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (adminParam !== "true") {
+    if (!currentUser) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    const result = await db.execute({ sql: "SELECT role FROM users WHERE id = ?", args: [currentUser.userId] });
+    const dbRole = result.rows[0]?.role;
+    if (dbRole !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const [users, transactions, loans] = await Promise.all([
