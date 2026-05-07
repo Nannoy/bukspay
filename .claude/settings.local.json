@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(./node_modules/.bin/tsc *)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(curl *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Users:', len\\(d['users']\\)\\); [print\\(f'  {u[\\\\\"id\\\\\"]} {u[\\\\\"username\\\\\"]} {u[\\\\\"password\\\\\"]}'\\) for u in d['users']]\")"
     ]
   }
 }

