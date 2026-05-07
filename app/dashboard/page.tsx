@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/Sidebar";
 import { Alert } from "@/components/Alert";
@@ -12,7 +12,7 @@ const actions = [
   { label: "Apply Loan",    href: "/loans",         bg: "#C47D0E", icon: "+" },
 ];
 
-export default function DashboardPage() {
+function DashboardContent() {
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
@@ -110,4 +110,8 @@ export default function DashboardPage() {
       </div>
     </AppShell>
   );
+}
+
+export default function DashboardPage() {
+  return <Suspense fallback={<AppShell><div style={{ padding: 40, color: "var(--text-muted)" }}>Loading…</div></AppShell>}><DashboardContent /></Suspense>;
 }

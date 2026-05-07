@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/Sidebar";
 
-export default function TransactionsPage() {
+function TransactionsContent() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
@@ -83,4 +83,8 @@ export default function TransactionsPage() {
       </div>
     </AppShell>
   );
+}
+
+export default function TransactionsPage() {
+  return <Suspense fallback={<AppShell><div style={{ padding: 40, color: "var(--text-muted)" }}>Loading…</div></AppShell>}><TransactionsContent /></Suspense>;
 }

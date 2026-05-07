@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/Sidebar";
 import { Alert, Spinner } from "@/components/Alert";
 
-export default function ProfilePage() {
+function ProfileContent() {
   const [user, setUser] = useState<any>(null);
   const [form, setForm] = useState({ phone: "", address: "", newPassword: "" });
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -106,4 +106,8 @@ export default function ProfilePage() {
       </div>
     </AppShell>
   );
+}
+
+export default function ProfilePage() {
+  return <Suspense fallback={<AppShell><div style={{ padding: 40, color: "var(--text-muted)" }}>Loading…</div></AppShell>}><ProfileContent /></Suspense>;
 }
