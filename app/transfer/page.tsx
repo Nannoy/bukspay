@@ -25,7 +25,7 @@ export default function TransferPage() {
 
   return (
     <AppShell>
-      <div style={{ padding: "40px 48px", maxWidth: 600 }}>
+      <div className="page-pad" style={{ maxWidth: 600 }}>
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Send Money</h1>
           <p className="page-sub">Transfer funds to any BuksPay account</p>

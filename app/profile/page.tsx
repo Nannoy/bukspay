@@ -45,7 +45,7 @@ function ProfileContent() {
 
   return (
     <AppShell username={user.username}>
-      <div style={{ padding: "40px 48px", maxWidth: 640 }}>
+      <div className="page-pad" style={{ maxWidth: 640 }}>
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Profile Settings</h1>
           <p className="page-sub">Manage your account information</p>
@@ -72,7 +72,7 @@ function ProfileContent() {
         {/* Form */}
         <div className="card fade-up fade-up-2">
           <form onSubmit={handleUpdate} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="g2">
               <div>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6 }}>Phone</label>
                 <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}

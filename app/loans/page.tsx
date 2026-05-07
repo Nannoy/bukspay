@@ -42,7 +42,7 @@ export default function LoansPage() {
 
   return (
     <AppShell>
-      <div style={{ padding: "40px 48px", maxWidth: 760 }}>
+      <div className="page-pad" style={{ maxWidth: 760 }}>
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Loan Application</h1>
           <p className="page-sub">Apply for credit — instant decisions</p>
@@ -52,7 +52,7 @@ export default function LoansPage() {
         <div className="card fade-up fade-up-1" style={{ marginBottom: 24 }}>
           <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 20 }}>New application</p>
           <form onSubmit={applyLoan} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="g2">
               <div>
                 <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--text-muted)", marginBottom: 6 }}>
                   Loan amount <span style={{ color: "var(--text-faint)" }}>(₦)</span>

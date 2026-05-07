@@ -23,7 +23,7 @@ function TransactionsContent() {
 
   return (
     <AppShell>
-      <div style={{ padding: "40px 48px", maxWidth: 900 }}>
+      <div className="page-pad" style={{ maxWidth: 900 }}>
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Transaction History</h1>
           <p className="page-sub">{loading ? "Loading…" : `${transactions.length} transaction${transactions.length !== 1 ? "s" : ""} found`}</p>

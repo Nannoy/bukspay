@@ -59,7 +59,7 @@ export default function AdminPage() {
 
   return (
     <AppShell>
-      <div style={{ padding: "40px 48px" }}>
+      <div className="page-pad">
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Admin Panel</h1>
           <p className="page-sub">Manage users, transactions, and loans</p>
@@ -74,7 +74,7 @@ export default function AdminPage() {
         {/* Admin actions */}
         <div className="card fade-up fade-up-1" style={{ marginBottom: 24 }}>
           <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", marginBottom: 16 }}>Admin Actions</p>
-          <form onSubmit={runAction} style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-end" }}>
+          <form onSubmit={runAction} style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-end", rowGap: 12 }}>
             <select value={action.action} onChange={(e) => setAction({ ...action, action: e.target.value })}
               className="field" style={{ width: 160 }}>
               <option value="">Select action</option>

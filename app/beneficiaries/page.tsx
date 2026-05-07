@@ -50,7 +50,7 @@ export default function BeneficiariesPage() {
 
   return (
     <AppShell>
-      <div style={{ padding: "40px 48px", maxWidth: 760 }}>
+      <div className="page-pad" style={{ maxWidth: 760 }}>
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Beneficiaries</h1>
           <p className="page-sub">Manage saved recipients for quick transfers</p>
@@ -60,7 +60,7 @@ export default function BeneficiariesPage() {
         <div className="card fade-up fade-up-1" style={{ marginBottom: 20 }}>
           <p style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 16 }}>Add beneficiary</p>
           <form onSubmit={addBeneficiary}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
+            <div className="g3" style={{ marginBottom: 14 }}>
               <div>
                 <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "var(--text-muted)", marginBottom: 5 }}>Name</label>
                 <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}

@@ -47,7 +47,7 @@ function DashboardContent() {
 
   return (
     <AppShell username={user.username}>
-      <div style={{ padding: "40px 48px", maxWidth: 900 }}>
+      <div className="page-pad" style={{ maxWidth: 900 }}>
 
         <div className="fade-up" style={{ marginBottom: 36 }}>
           <h1 className="page-title">Good day, {user.username}</h1>
@@ -73,7 +73,7 @@ function DashboardContent() {
           </div>
         </div>
 
-        <div className="fade-up fade-up-2" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
+        <div className="fade-up fade-up-2 g4" style={{ marginBottom: 28 }}>
           {actions.map((a) => (
             <Link key={a.href} href={a.href} style={{
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",

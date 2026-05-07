@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div style={{ minHeight: "100vh", background: "#0A1628", display: "flex", flexDirection: "column" }}>
       {/* Top bar */}
-      <header style={{ padding: "24px 48px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <header style={{ padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 32, height: 32, background: "#1347E8", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -27,7 +27,7 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px 24px", textAlign: "center" }}>
+      <main style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 20px", textAlign: "center" }}>
 
 <h1 style={{
           fontFamily: "'Fraunces', serif",
@@ -68,7 +68,7 @@ export default function Home() {
       </main>
 
       {/* Feature strip */}
-      <div style={{ borderTop: "1px solid #1E293B", padding: "24px 48px", display: "flex", gap: 48, justifyContent: "center", flexWrap: "wrap" }}>
+      <div style={{ borderTop: "1px solid #1E293B", padding: "20px 24px", display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap" }}>
         {["A01 Broken Access", "A02 Crypto Failures", "A03 SQL Injection", "A05 Misconfiguration", "A07 Auth Failures"].map((v) => (
           <span key={v} style={{ fontSize: 12, fontWeight: 500, color: "#475569", letterSpacing: "0.05em" }}>{v}</span>
         ))}

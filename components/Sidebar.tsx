@@ -12,7 +12,7 @@ const nav = [
   { href: "/profile",       label: "Profile",        icon: UserIcon },
 ];
 
-export default function Sidebar({ username }: { username?: string }) {
+function SidebarContent({ username, onNav }: { username?: string; onNav?: () => void }) {
   const path = usePathname();
   const router = useRouter();
   const [role, setRole] = useState<string | null>(null);
@@ -30,41 +30,26 @@ export default function Sidebar({ username }: { username?: string }) {
 
   return (
     <aside style={{
-      width: "var(--sidebar)",
+      width: 260,
       minHeight: "100vh",
       background: "var(--surface)",
       borderRight: "1px solid var(--border)",
       display: "flex",
       flexDirection: "column",
-      position: "fixed",
-      top: 0,
-      left: 0,
-      zIndex: 40,
     }}>
       {/* Logo */}
       <div style={{ padding: "28px 24px 20px" }}>
-        <Link href="/dashboard" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{
-            width: 34, height: 34,
-            background: "var(--accent)",
-            borderRadius: 8,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
+        <Link href="/dashboard" onClick={onNav} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 34, height: 34, background: "var(--accent)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span style={{
-            fontFamily: "'Fraunces', serif",
-            fontSize: 20,
-            fontWeight: 600,
-            color: "var(--text)",
-            letterSpacing: "-0.3px",
-          }}>BuksPay</span>
+          <span style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 600, color: "var(--text)", letterSpacing: "-0.3px" }}>BuksPay</span>
         </Link>
       </div>
 
-      {/* Nav items */}
+      {/* Nav */}
       <nav style={{ flex: 1, padding: "8px 12px" }}>
         <p style={{ fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-faint)", padding: "0 12px", marginBottom: 8 }}>
           Menu
@@ -73,21 +58,16 @@ export default function Sidebar({ username }: { username?: string }) {
           {nav.map(({ href, label, icon: Icon }) => {
             const active = path === href || path.startsWith(href + "/");
             return (
-              <Link key={href} href={href} style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "9px 12px",
-                borderRadius: 8,
-                textDecoration: "none",
-                fontSize: 14,
-                fontWeight: active ? 500 : 400,
+              <Link key={href} href={href} onClick={onNav} style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "10px 12px", borderRadius: 8, textDecoration: "none",
+                fontSize: 14, fontWeight: active ? 500 : 400,
                 color: active ? "var(--accent)" : "var(--text-muted)",
                 background: active ? "var(--accent-dim)" : "transparent",
                 transition: "all 0.12s ease",
               }}
-              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = "var(--surface-2)"; (e.currentTarget as HTMLElement).style.color = "var(--text)"; }}
-              onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--text-muted)"; } }}
+              onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = "var(--surface-2)"; (e.currentTarget as HTMLElement).style.color = "var(--text)"; }}}
+              onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--text-muted)"; }}}
               >
                 <Icon size={16} color={active ? "var(--accent)" : "var(--text-faint)"} />
                 {label}
@@ -96,22 +76,16 @@ export default function Sidebar({ username }: { username?: string }) {
           })}
 
           {role === "admin" && (
-            <Link href="/admin" style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "9px 12px",
-              borderRadius: 8,
-              textDecoration: "none",
-              fontSize: 14,
-              fontWeight: path === "/admin" ? 500 : 400,
+            <Link href="/admin" onClick={onNav} style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "10px 12px", borderRadius: 8, textDecoration: "none",
+              fontSize: 14, fontWeight: path === "/admin" ? 500 : 400,
               color: path === "/admin" ? "var(--danger)" : "var(--text-muted)",
               background: path === "/admin" ? "var(--danger-dim)" : "transparent",
-              transition: "all 0.12s ease",
-              marginTop: 8,
+              transition: "all 0.12s ease", marginTop: 8,
             }}
-            onMouseEnter={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "var(--surface-2)"; (e.currentTarget as HTMLElement).style.color = "var(--text)"; } }}
-            onMouseLeave={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--text-muted)"; } }}
+            onMouseEnter={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "var(--surface-2)"; (e.currentTarget as HTMLElement).style.color = "var(--text)"; }}}
+            onMouseLeave={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--text-muted)"; }}}
             >
               <ShieldIcon size={16} color={path === "/admin" ? "var(--danger)" : "var(--text-faint)"} />
               Admin
@@ -124,13 +98,7 @@ export default function Sidebar({ username }: { username?: string }) {
       <div style={{ padding: "16px", borderTop: "1px solid var(--border)" }}>
         {username && (
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: "50%",
-              background: "var(--accent-dim)",
-              border: "1px solid var(--accent)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 13, fontWeight: 600, color: "var(--accent)",
-            }}>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--accent-dim)", border: "1px solid var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 600, color: "var(--accent)" }}>
               {username[0].toUpperCase()}
             </div>
             <div>
@@ -139,22 +107,7 @@ export default function Sidebar({ username }: { username?: string }) {
             </div>
           </div>
         )}
-        <button onClick={logout} style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
-          padding: "8px 12px",
-          borderRadius: 8,
-          border: "1px solid var(--border)",
-          background: "transparent",
-          fontSize: 13,
-          fontWeight: 500,
-          color: "var(--text-muted)",
-          cursor: "pointer",
-          transition: "all 0.12s",
-        }}
+        <button onClick={logout} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "transparent", fontSize: 13, fontWeight: 500, color: "var(--text-muted)", cursor: "pointer", transition: "all 0.12s" }}
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "var(--danger-dim)"; (e.currentTarget as HTMLButtonElement).style.color = "var(--danger)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "#FECACA"; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text-muted)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)"; }}
         >
@@ -167,10 +120,38 @@ export default function Sidebar({ username }: { username?: string }) {
 }
 
 export function AppShell({ children, username }: { children: React.ReactNode; username?: string }) {
+  const [open, setOpen] = useState(false);
+  const path = usePathname();
+
+  useEffect(() => { setOpen(false); }, [path]);
+
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar username={username} />
-      <main style={{ marginLeft: "var(--sidebar)", flex: 1, minHeight: "100vh", background: "var(--bg)" }}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* Sidebar — fixed on desktop, drawer on mobile */}
+      {open && <div className="sidebar-overlay" onClick={() => setOpen(false)} />}
+      <div className={`sidebar-drawer${open ? " open" : ""}`} style={{
+        position: "fixed", top: 0, left: 0, height: "100%", zIndex: 40,
+        width: 260, transform: undefined,
+      }}>
+        <SidebarContent username={username} onNav={() => setOpen(false)} />
+      </div>
+      {/* Spacer so content doesn't sit under sidebar on desktop */}
+      <div className="sidebar-spacer" style={{ width: 260, flexShrink: 0 }} />
+
+      <main style={{ flex: 1, minHeight: "100vh", background: "var(--bg)", overflow: "auto", minWidth: 0 }}>
+        {/* Mobile top bar */}
+        <div className="mobile-header">
+          <button className="hamburger-btn" onClick={() => setOpen(true)} aria-label="Open menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <Link href="/dashboard" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 28, height: 28, background: "var(--accent)", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+            <span style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 600, color: "var(--text)" }}>BuksPay</span>
+          </Link>
+        </div>
+
         {children}
       </main>
     </div>

@@ -51,7 +51,7 @@ export default function RegisterPage() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", colorScheme: "light" }}>
       {/* ── Left dark panel ── */}
-      <div style={{ flex: "0 0 400px", background: "#0A1628", display: "flex", flexDirection: "column", padding: "44px 40px" }}>
+      <div className="auth-left">
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
           <div style={{ width: 32, height: 32, background: "#1347E8", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -68,22 +68,10 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {[
-            "A03 · SQL injection in registration",
-            "A02 · Password stored as MD5",
-            "A02 · Token set without httpOnly",
-          ].map((v) => (
-            <div key={v} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: "#F0883E" }}>
-              <span style={{ width: 5, height: 5, borderRadius: 2, background: "#F0883E", flexShrink: 0 }} />
-              {v}
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* ── Right form panel ── */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "#F7F6F2", padding: "48px 24px" }}>
+      <div className="auth-right">
         <div style={{ width: "100%", maxWidth: 420 }}>
           <div style={{
             background: "#ffffff", borderRadius: 20, padding: "40px 36px",
