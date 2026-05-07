@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const nav = [
   { href: "/dashboard",     label: "Dashboard",     icon: HomeIcon },
@@ -14,6 +15,13 @@ const nav = [
 export default function Sidebar({ username }: { username?: string }) {
   const path = usePathname();
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/dashboard").then((r) => r.json()).then((d) => {
+      if (d.user?.role) setRole(d.user.role);
+    });
+  }, []);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -87,27 +95,28 @@ export default function Sidebar({ username }: { username?: string }) {
             );
           })}
 
-          {/* Admin - special */}
-          <Link href="/admin" style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "9px 12px",
-            borderRadius: 8,
-            textDecoration: "none",
-            fontSize: 14,
-            fontWeight: path === "/admin" ? 500 : 400,
-            color: path === "/admin" ? "#C00" : "#B45309",
-            background: path === "/admin" ? "#FEF2F2" : "transparent",
-            transition: "all 0.12s ease",
-            marginTop: 8,
-          }}>
-            <ShieldIcon size={16} color="#B45309" />
-            Admin
-            <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 700, background: "#FEF2F2", color: "#B45309", border: "1px solid #FECACA", borderRadius: 4, padding: "1px 5px", textTransform: "uppercase" }}>
-              vuln
-            </span>
-          </Link>
+          {role === "admin" && (
+            <Link href="/admin" style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "9px 12px",
+              borderRadius: 8,
+              textDecoration: "none",
+              fontSize: 14,
+              fontWeight: path === "/admin" ? 500 : 400,
+              color: path === "/admin" ? "var(--danger)" : "var(--text-muted)",
+              background: path === "/admin" ? "var(--danger-dim)" : "transparent",
+              transition: "all 0.12s ease",
+              marginTop: 8,
+            }}
+            onMouseEnter={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "var(--surface-2)"; (e.currentTarget as HTMLElement).style.color = "var(--text)"; } }}
+            onMouseLeave={e => { if (path !== "/admin") { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--text-muted)"; } }}
+            >
+              <ShieldIcon size={16} color={path === "/admin" ? "var(--danger)" : "var(--text-faint)"} />
+              Admin
+            </Link>
+          )}
         </div>
       </nav>
 
