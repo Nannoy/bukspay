@@ -8,6 +8,7 @@ export default function AdminPage() {
   const [action, setAction] = useState({ action: "", userId: "", amount: "", role: "" });
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loanActionId, setLoanActionId] = useState<number | null>(null);
   const [tab, setTab] = useState<"users" | "transactions" | "loans">("users");
 
   function loadData() {
@@ -15,6 +16,19 @@ export default function AdminPage() {
   }
 
   useEffect(() => { loadData(); }, []);
+
+  async function handleLoanAction(loanId: number, act: "approveLoan" | "rejectLoan") {
+    setLoanActionId(loanId);
+    const res = await fetch("/api/admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: act, loanId }),
+    });
+    const d = await res.json();
+    setLoanActionId(null);
+    setMsg(res.ok ? { type: "success", text: d.message } : { type: "error", text: d.error });
+    loadData();
+  }
 
   async function runAction(e: React.FormEvent) {
     e.preventDefault();
@@ -86,6 +100,7 @@ export default function AdminPage() {
         {/* Data tables */}
         {data && !data.error && (
           <div className="fade-up fade-up-2">
+          {msg && tab === "loans" && <div style={{ marginBottom: 16 }}><Alert type={msg.type} message={msg.text} /></div>}
             <div style={{ display: "flex", gap: 4, marginBottom: 16, background: "var(--surface-2)", padding: 4, borderRadius: 8, width: "fit-content" }}>
               <button style={tabStyle("users")} onClick={() => setTab("users")}>
                 Users ({data.users?.length ?? 0})
@@ -154,7 +169,7 @@ export default function AdminPage() {
               {tab === "loans" && (
                 <table className="data-table">
                   <thead>
-                    <tr><th>ID</th><th>User</th><th>Amount</th><th>Purpose</th><th>Status</th><th>Date</th></tr>
+                    <tr><th>ID</th><th>User</th><th>Amount</th><th>Purpose</th><th>Status</th><th>Date</th><th>Action</th></tr>
                   </thead>
                   <tbody>
                     {(data.loans || []).map((l: any) => (
@@ -167,10 +182,32 @@ export default function AdminPage() {
                         <td style={{ color: "var(--text-muted)", fontSize: 13 }}>{l.purpose}</td>
                         <td><span className={`badge badge-${l.status}`}>{l.status}</span></td>
                         <td style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "var(--text-faint)" }}>{l.created_at?.slice(0, 10)}</td>
+                        <td>
+                          {l.status === "pending" ? (
+                            <div style={{ display: "flex", gap: 6 }}>
+                              <button
+                                onClick={() => handleLoanAction(l.id, "approveLoan")}
+                                disabled={loanActionId === l.id}
+                                style={{ padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "1px solid #6EE7B7", background: "var(--success-dim)", color: "var(--success)", opacity: loanActionId === l.id ? 0.6 : 1 }}
+                              >
+                                {loanActionId === l.id ? "…" : "Approve"}
+                              </button>
+                              <button
+                                onClick={() => handleLoanAction(l.id, "rejectLoan")}
+                                disabled={loanActionId === l.id}
+                                style={{ padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", border: "1px solid #FECACA", background: "var(--danger-dim)", color: "var(--danger)", opacity: loanActionId === l.id ? 0.6 : 1 }}
+                              >
+                                {loanActionId === l.id ? "…" : "Reject"}
+                              </button>
+                            </div>
+                          ) : (
+                            <span style={{ fontSize: 12, color: "var(--text-faint)" }}>—</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                     {!data.loans?.length && (
-                      <tr><td colSpan={6} style={{ textAlign: "center", padding: 40, color: "var(--text-faint)" }}>No loans</td></tr>
+                      <tr><td colSpan={7} style={{ textAlign: "center", padding: 40, color: "var(--text-faint)" }}>No loans</td></tr>
                     )}
                   </tbody>
                 </table>

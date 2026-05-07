@@ -16,10 +16,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const db = getDb();
-  const { userId, amount, purpose, employment, monthlyIncome } = await req.json();
+  const { userId: bodyUserId, amount, purpose, employment, monthlyIncome } = await req.json();
 
   // VULN: A07 - no authentication required to submit a loan for any userId
-  if (!userId) return NextResponse.json({ error: "User ID required" }, { status: 400 });
+  const currentUser = await getCurrentUser();
+  const userId = bodyUserId || currentUser?.userId;
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   // VULN: A03 - purpose and employment injected into SQL
   const sql = `INSERT INTO loans (user_id, amount, purpose, employment, monthly_income)
